@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>毎日の食事メモ報告 — 2026.05.08</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f3ec;
+    --paper-deep: #efe8db;
+    --ink: #2a241e;
+    --ink-soft: #5a4f44;
+    --accent: #b8543a;
+    --accent-deep: #8a3a25;
+    --gold: #b89668;
+    --leaf: #6b7a3e;
+    --rule: #d9cfba;
+  }
+  body {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(184, 84, 58, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(107, 122, 62, 0.05) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.14 0 0 0 0 0.11 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .font-mincho { font-family: 'Shippori Mincho', serif; }
+  .font-latin { font-family: 'Cormorant Garamond', serif; }
+  .vertical-jp {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  .seal {
+    background: var(--accent);
+    color: var(--paper);
+    font-family: 'Shippori Mincho', serif;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.08), inset 0 0 0 2px rgba(255,255,255,0.15);
+    transform: rotate(-4deg);
+  }
+  .deco-line {
+    background-image: linear-gradient(to right, var(--ink) 50%, transparent 50%);
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+  }
+  .meal-card {
+    background: linear-gradient(180deg, #fdfaf3 0%, #f7f3ec 100%);
+    border: 1px solid var(--rule);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 12px 24px -16px rgba(42, 36, 30, 0.2),
+      0 2px 4px -2px rgba(42, 36, 30, 0.06);
+  }
+  .ribbon-tag {
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .nutri-bar-track {
+    background: var(--paper-deep);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .gauge-circle {
+    transform: rotate(-90deg);
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rule), transparent);
+  }
+  .ornament-symbol {
+    color: var(--gold);
+    margin: 0 1rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.3em;
+  }
+  .photo-frame {
+    background: linear-gradient(135deg, #d4c4a8 0%, #a89376 50%, #8a7558 100%);
+    padding: 6px;
+    box-shadow: 0 8px 16px -8px rgba(42, 36, 30, 0.3);
+  }
+  .star-rating { letter-spacing: 0.15em; color: var(--accent); }
+  .calendar-cell {
+    aspect-ratio: 1;
+    border: 1px solid var(--rule);
+  }
+  .marker-highlight {
+    background: linear-gradient(180deg, transparent 60%, rgba(184, 150, 104, 0.35) 60%);
+  }
+  .corner-cut {
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+  .grain-overlay {
+    position: relative;
+  }
+  .grain-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-5xl mx-auto px-6 md:px-12 py-10 md:py-16">
+
+  <!-- ========= ヘッダー ========= -->
+  <header class="relative mb-12">
+    <div class="flex items-start justify-between gap-6 mb-6">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-latin italic text-sm tracking-widest" style="color: var(--ink-soft);">No. 0142</span>
+          <span class="deco-line h-px flex-1 max-w-[120px]"></span>
+          <span class="font-latin text-xs tracking-[0.3em] uppercase" style="color: var(--ink-soft);">Daily Meal Journal</span>
+        </div>
+        <h1 class="font-mincho font-bold leading-[1.05] tracking-tight" style="font-size: clamp(2.5rem, 6vw, 4.25rem);">
+          毎日の<span style="color: var(--accent);">食事メモ</span><br>
+          <span class="font-latin italic font-medium text-3xl md:text-4xl" style="color: var(--ink-soft);">— a record of small flavors —</span>
+        </h1>
+      </div>
+      <div class="seal w-20 h-20 rounded-full flex flex-col items-center justify-center shrink-0 grain-overlay">
+        <span class="text-[0.6rem] tracking-widest opacity-80">REPORT</span>
+        <span class="font-bold text-2xl leading-none">食</span>
+        <span class="text-[0.55rem] tracking-widest opacity-80 mt-0.5">2026</span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4" style="border-top: 1px solid var(--rule);">
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Date</div>
+        <div class="font-mincho text-lg font-medium">2026年 5月 8日 <span class="text-sm" style="color: var(--ink-soft);">金曜日</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Weather</div>
+        <div class="font-mincho text-lg font-medium">晴れ <span class="text-sm" style="color: var(--ink-soft);">・ 22℃</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Mood</div>
+        <div class="font-mincho text-lg font-medium">爽快 <span class="star-rating text-sm">★★★★☆</span></div>
+      </div>
+      <div class="ml-auto text-right">
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Generated</div>
+        <div class="font-mincho text-sm" style="color: var(--ink-soft);">via GitHub Actions ・ 06:00 JST</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========= サマリーストリップ ========= -->
+  <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Total Calories</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold" style="color: var(--accent);">1,847</span>
+        <span class="text-sm" style="color: var(--ink-soft);">kcal</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">目標: 2,000 kcal ・ 92%</div>
+    </div>
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Meals Logged</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold">3</span>
+        <span class="text-sm" style="color: var(--ink-soft);">食 + 間食1</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">朝・昼・夕 完食</div>
+    </div>
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Water Intake</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold">1.8</span>
+        <span class="text-sm" style="color: var(--ink-soft);">L</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">●●●●●●●●○○ 80%</div>
+    </div>
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Streak</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold" style="color: var(--leaf);">14</span>
+        <span class="text-sm" style="color: var(--ink-soft);">日連続</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">記録継続中 🌱</div>
+    </div>
+  </section>
+
+  <!-- ========= 装飾区切り ========= -->
+  <div class="ornament flex items-center mb-10">
+    <span class="ornament-symbol">❖ ・ ❖</span>
+  </div>
+
+  <!-- ========= 三食メインセクション ========= -->
+  <section class="space-y-8 mb-16">
+
+    <!-- 朝食 -->
+    <article class="meal-card p-6 md:p-8 grain-overlay">
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- 写真 -->
+        <div class="md:w-2/5">
+          <div class="photo-frame">
+            <div class="aspect-[4/3] flex items-center justify-center" style="background: linear-gradient(135deg, #f4d6a8 0%, #e8b67d 50%, #c98856 100%);">
+              <svg viewBox="0 0 200 150" class="w-full h-full">
+                <!-- お皿 -->
+                <ellipse cx="100" cy="105" rx="75" ry="18" fill="rgba(0,0,0,0.15)"/>
+                <ellipse cx="100" cy="100" rx="72" ry="14" fill="#f5ead4"/>
+                <ellipse cx="100" cy="98" rx="65" ry="11" fill="#fbf6e9"/>
+                <!-- パン -->
+                <ellipse cx="75" cy="92" rx="22" ry="14" fill="#c08850"/>
+                <ellipse cx="75" cy="89" rx="22" ry="14" fill="#d4a070"/>
+                <rect x="63" y="85" width="24" height="3" fill="#8b5a30" opacity="0.4"/>
+                <!-- 目玉焼き -->
+                <ellipse cx="120" cy="93" rx="20" ry="8" fill="#fffdf5"/>
+                <circle cx="122" cy="91" r="6" fill="#f5b440"/>
+                <circle cx="121" cy="90" r="2" fill="#f8c870" opacity="0.7"/>
+                <!-- サラダの葉 -->
+                <ellipse cx="145" cy="94" rx="8" ry="5" fill="#7a9050"/>
+                <ellipse cx="152" cy="92" rx="6" ry="4" fill="#8aa060"/>
+                <circle cx="158" cy="95" r="2" fill="#c44a3a"/>
+                <!-- コーヒーカップ -->
+                <ellipse cx="45" cy="80" rx="14" ry="3" fill="rgba(0,0,0,0.2)"/>
+                <path d="M 32 55 L 33 78 Q 33 80 35 80 L 55 80 Q 57 80 57 78 L 58 55 Z" fill="#fbf6e9"/>
+                <ellipse cx="45" cy="55" rx="13" ry="3" fill="#3a2418"/>
+                <path d="M 58 60 Q 65 60 65 67 Q 65 73 58 73" fill="none" stroke="#fbf6e9" stroke-width="2"/>
+                <!-- 湯気 -->
+                <path d="M 40 45 Q 38 40 42 35 Q 46 30 42 25" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.6"/>
+                <path d="M 48 45 Q 50 40 46 35 Q 42 30 46 25" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.6"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs" style="color: var(--ink-soft);">
+            <span class="font-latin italic">— breakfast plate —</span>
+            <span>📷 07:24</span>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="md:w-3/5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="ribbon-tag px-3 py-1 text-xs tracking-widest font-latin uppercase">01 Morning</span>
+                <span class="font-latin italic text-sm" style="color: var(--ink-soft);">07:30</span>
+              </div>
+              <h2 class="font-mincho text-3xl font-bold">朝食 <span class="text-base font-normal" style="color: var(--ink-soft);">— あさごはん</span></h2>
+            </div>
+            <div class="text-right">
+              <div class="font-mincho text-2xl font-bold" style="color: var(--accent);">485</div>
+              <div class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">KCAL</div>
+            </div>
+          </div>
+
+          <ul class="space-y-1 mb-4 text-sm">
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">全粒粉トースト <span style="color: var(--ink-soft);">(バター少々)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">220 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">目玉焼き <span style="color: var(--ink-soft);">(半熟・塩こしょう)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">95 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">グリーンサラダ <span style="color: var(--ink-soft);">(レタス・トマト・きゅうり)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">45 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">ブラックコーヒー</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">5 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">ヨーグルト <span style="color: var(--ink-soft);">(ブルーベリー添え)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">120 kcal</span>
+            </li>
+          </ul>
+
+          <div class="p-3 text-sm leading-relaxed font-mincho italic" style="background: var(--paper-deep); border-left: 3px solid var(--accent); color: var(--ink-soft);">
+            「<span class="marker-highlight">パンの香ばしさが格別</span>。窓辺の光が差し込んで、コーヒーの湯気がきれいだった。」
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 昼食 -->
+    <article class="meal-card p-6 md:p-8 grain-overlay">
+      <div class="flex flex-col md:flex-row-reverse gap-6">
+        <!-- 写真 -->
+        <div class="md:w-2/5">
+          <div class="photo-frame">
+            <div class="aspect-[4/3] flex items-center justify-center" style="background: linear-gradient(135deg, #d4ad7c 0%, #b8854d 50%, #8a5d2a 100%);">
+              <svg viewBox="0 0 200 150" class="w-full h-full">
+                <!-- 丼 -->
+                <ellipse cx="100" cy="120" rx="78" ry="14" fill="rgba(0,0,0,0.2)"/>
+                <path d="M 25 90 Q 25 125 100 125 Q 175 125 175 90 Z" fill="#1a1a1a"/>
+                <ellipse cx="100" cy="90" rx="75" ry="14" fill="#2a2a2a"/>
+                <!-- ご飯 -->
+                <ellipse cx="100" cy="86" rx="65" ry="10" fill="#fbf6e9"/>
+                <!-- 具材 -->
+                <ellipse cx="80" cy="80" rx="20" ry="8" fill="#a04030"/>
+                <ellipse cx="80" cy="78" rx="20" ry="8" fill="#c45040"/>
+                <ellipse cx="125" cy="82" rx="18" ry="6" fill="#fde2c0"/>
+                <ellipse cx="125" cy="80" rx="18" ry="6" fill="#ffd095"/>
+                <!-- ねぎ -->
+                <circle cx="70" cy="74" r="2" fill="#90b060"/>
+                <circle cx="100" cy="76" r="2" fill="#90b060"/>
+                <circle cx="135" cy="74" r="2" fill="#90b060"/>
+                <circle cx="115" cy="78" r="2" fill="#90b060"/>
+                <circle cx="90" cy="74" r="2" fill="#90b060"/>
+                <!-- 海苔 -->
+                <rect x="95" y="72" width="14" height="3" fill="#1a2818"/>
+                <!-- 味噌汁の椀 -->
+                <ellipse cx="40" cy="60" rx="18" ry="3" fill="rgba(0,0,0,0.2)"/>
+                <path d="M 23 45 Q 23 60 40 60 Q 57 60 57 45 Z" fill="#5a2818"/>
+                <ellipse cx="40" cy="45" rx="17" ry="3" fill="#8a6a3a"/>
+                <circle cx="38" cy="44" r="1.5" fill="#1a2818"/>
+                <circle cx="44" cy="45" r="1" fill="#90b060"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs" style="color: var(--ink-soft);">
+            <span class="font-latin italic">— lunch bowl —</span>
+            <span>📷 12:48</span>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="md:w-3/5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="ribbon-tag px-3 py-1 text-xs tracking-widest font-latin uppercase">02 Noon</span>
+                <span class="font-latin italic text-sm" style="color: var(--ink-soft);">12:45</span>
+              </div>
+              <h2 class="font-mincho text-3xl font-bold">昼食 <span class="text-base font-normal" style="color: var(--ink-soft);">— おひるごはん</span></h2>
+            </div>
+            <div class="text-right">
+              <div class="font-mincho text-2xl font-bold" style="color: var(--accent);">720</div>
+              <div class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">KCAL</div>
+            </div>
+          </div>
+
+          <ul class="space-y-1 mb-4 text-sm">
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">親子丼 <span style="color: var(--ink-soft);">(大盛り・三つ葉のせ)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">580 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">なめこの味噌汁</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">55 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">ほうれん草のおひたし</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">35 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">沢庵</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">10 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">緑茶</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">0 kcal</span>
+            </li>
+          </ul>
+
+          <div class="p-3 text-sm leading-relaxed font-mincho italic" style="background: var(--paper-deep); border-left: 3px solid var(--accent); color: var(--ink-soft);">
+            「会社近くの<span class="marker-highlight">『鳥や』にて</span>。出汁が利いていて卵がふわふわ。三つ葉の香りが季節を感じさせた。」
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 夕食 -->
+    <article class="meal-card p-6 md:p-8 grain-overlay">
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- 写真 -->
+        <div class="md:w-2/5">
+          <div class="photo-frame">
+            <div class="aspect-[4/3] flex items-center justify-center" style="background: linear-gradient(135deg, #6a7a4e 0%, #4a5a3e 50%, #2a3a2e 100%);">
+              <svg viewBox="0 0 200 150" class="w-full h-full">
+                <!-- お盆 -->
+                <rect x="15" y="60" width="170" height="65" rx="3" fill="#3a2418"/>
+                <rect x="18" y="63" width="164" height="59" rx="2" fill="#4a3020"/>
+                <!-- ご飯茶碗 -->
+                <ellipse cx="55" cy="115" rx="22" ry="3" fill="rgba(0,0,0,0.3)"/>
+                <path d="M 33 95 Q 33 115 55 115 Q 77 115 77 95 Z" fill="#fbf6e9"/>
+                <ellipse cx="55" cy="95" rx="22" ry="4" fill="#fffefa"/>
+                <!-- 焼き魚 -->
+                <ellipse cx="125" cy="100" rx="38" ry="10" fill="#3a1a0a"/>
+                <ellipse cx="125" cy="98" rx="38" ry="10" fill="#7a4020"/>
+                <ellipse cx="125" cy="97" rx="35" ry="8" fill="#a06030"/>
+                <path d="M 90 98 L 85 94 L 85 102 Z" fill="#7a4020"/>
+                <!-- 焼き目 -->
+                <line x1="105" y1="95" x2="115" y2="100" stroke="#3a1a0a" stroke-width="1"/>
+                <line x1="120" y1="93" x2="130" y2="100" stroke="#3a1a0a" stroke-width="1"/>
+                <line x1="135" y1="95" x2="145" y2="100" stroke="#3a1a0a" stroke-width="1"/>
+                <!-- 大根おろし -->
+                <ellipse cx="155" cy="102" rx="8" ry="3" fill="#fff"/>
+                <!-- 小鉢 -->
+                <ellipse cx="165" cy="80" rx="15" ry="3" fill="rgba(0,0,0,0.3)"/>
+                <ellipse cx="165" cy="78" rx="15" ry="5" fill="#5a4020"/>
+                <ellipse cx="165" cy="77" rx="13" ry="3" fill="#c08850"/>
+                <circle cx="160" cy="76" r="1.5" fill="#7a9050"/>
+                <circle cx="168" cy="77" r="1.5" fill="#a04030"/>
+                <!-- 味噌汁 -->
+                <ellipse cx="40" cy="78" rx="14" ry="3" fill="rgba(0,0,0,0.3)"/>
+                <path d="M 26 65 Q 26 78 40 78 Q 54 78 54 65 Z" fill="#5a2818"/>
+                <ellipse cx="40" cy="65" rx="14" ry="3" fill="#7a5028"/>
+                <!-- 箸 -->
+                <line x1="20" y1="45" x2="65" y2="55" stroke="#2a1a0a" stroke-width="2"/>
+                <line x1="22" y1="50" x2="67" y2="60" stroke="#2a1a0a" stroke-width="2"/>
+              </svg>
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs" style="color: var(--ink-soft);">
+            <span class="font-latin italic">— evening tray —</span>
+            <span>📷 19:32</span>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="md:w-3/5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="ribbon-tag px-3 py-1 text-xs tracking-widest font-latin uppercase">03 Evening</span>
+                <span class="font-latin italic text-sm" style="color: var(--ink-soft);">19:30</span>
+              </div>
+              <h2 class="font-mincho text-3xl font-bold">夕食 <span class="text-base font-normal" style="color: var(--ink-soft);">— ばんごはん</span></h2>
+            </div>
+            <div class="text-right">
+              <div class="font-mincho text-2xl font-bold" style="color: var(--accent);">580</div>
+              <div class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">KCAL</div>
+            </div>
+          </div>
+
+          <ul class="space-y-1 mb-4 text-sm">
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">焼き鮭 <span style="color: var(--ink-soft);">(塩・大根おろし添え)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">180 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">玄米ご飯 <span style="color: var(--ink-soft);">(150g)</span></span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">235 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">きんぴらごぼう</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">90 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">わかめと豆腐の味噌汁</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">65 kcal</span>
+            </li>
+            <li class="flex items-baseline gap-2">
+              <span style="color: var(--gold);">◦</span>
+              <span class="flex-1">ぬか漬け</span>
+              <span class="font-latin text-xs" style="color: var(--ink-soft);">10 kcal</span>
+            </li>
+          </ul>
+
+          <div class="p-3 text-sm leading-relaxed font-mincho italic" style="background: var(--paper-deep); border-left: 3px solid var(--accent); color: var(--ink-soft);">
+            「鮭の塩加減がちょうど良かった。<span class="marker-highlight">玄米の歯ごたえ</span>と味噌汁の温かさが、一日の終わりにぴったり。」
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ========= 装飾区切り ========= -->
+  <div class="ornament flex items-center mb-10">
+    <span class="ornament-symbol">❖ ・ 栄養バランス ・ ❖</span>
+  </div>
+
+  <!-- ========= 栄養バランス & 摂取グラフ ========= -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
+
+    <!-- PFCバランス -->
+    <div class="meal-card p-6 lg:col-span-2">
+      <div class="flex items-baseline justify-between mb-5">
+        <h3 class="font-mincho text-xl font-bold">栄養素バランス</h3>
+        <span class="font-latin italic text-xs" style="color: var(--ink-soft);">Macro nutrients</span>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">タンパク質</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Protein</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">78</span>
+              <span style="color: var(--ink-soft);"> / 90 g</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: 87%; background: linear-gradient(to right, #b8543a, #d4684e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">脂質</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Fat</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">52</span>
+              <span style="color: var(--ink-soft);"> / 60 g</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: 87%; background: linear-gradient(to right, #b89668, #d4b07e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">炭水化物</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Carbohydrate</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">235</span>
+              <span style="color: var(--ink-soft);"> / 270 g</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: 87%; background: linear-gradient(to right, #6b7a3e, #8a9a5e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">食物繊維</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Fiber</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">22</span>
+              <span style="color: var(--ink-soft);"> / 21 g</span>
+              <span class="ml-1" style="color: var(--leaf);">✓</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: 100%; background: linear-gradient(to right, #4a6a2e, #6b8a4e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">塩分</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Salt</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">8.2</span>
+              <span style="color: var(--ink-soft);"> / 7.5 g</span>
+              <span class="ml-1" style="color: var(--accent);">!</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: 100%; background: linear-gradient(to right, #8a3a25, #b8543a);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- カロリー配分 -->
+    <div class="meal-card p-6">
+      <div class="flex items-baseline justify-between mb-5">
+        <h3 class="font-mincho text-xl font-bold">時間別配分</h3>
+        <span class="font-latin italic text-xs" style="color: var(--ink-soft);">Distribution</span>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <div class="relative w-44 h-44 mb-4">
+          <svg viewBox="0 0 100 100" class="gauge-circle w-full h-full">
+            <!-- 背景 -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--paper-deep)" stroke-width="14"/>
+            <!-- 朝 26% -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#b89668" stroke-width="14"
+                    stroke-dasharray="65.3 251" stroke-dashoffset="0"/>
+            <!-- 昼 39% -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#b8543a" stroke-width="14"
+                    stroke-dasharray="98 251" stroke-dashoffset="-65.3"/>
+            <!-- 夕 31% -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#6b7a3e" stroke-width="14"
+                    stroke-dasharray="77.8 251" stroke-dashoffset="-163.3"/>
+            <!-- 間食 4% -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#5a4f44" stroke-width="14"
+                    stroke-dasharray="10 251" stroke-dashoffset="-241.1"/>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span class="font-mincho text-3xl font-bold" style="color: var(--accent);">1,847</span>
+            <span class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">TOTAL KCAL</span>
+          </div>
+        </div>
+
+        <div class="w-full space-y-1.5 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #b89668;"></span>
+            <span class="font-mincho flex-1">朝食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">26%</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #b8543a;"></span>
+            <span class="font-mincho flex-1">昼食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">39%</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #6b7a3e;"></span>
+            <span class="font-mincho flex-1">夕食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">31%</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #5a4f44;"></span>
+            <span class="font-mincho flex-1">間食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">4%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= 週間カレンダー ========= -->
+  <section class="meal-card p-6 md:p-8 mb-16">
+    <div class="flex items-baseline justify-between mb-6">
+      <h3 class="font-mincho text-xl font-bold">週間記録 <span class="font-latin italic text-sm font-normal" style="color: var(--ink-soft);">— 今週の食卓</span></h3>
+      <span class="font-latin italic text-xs" style="color: var(--ink-soft);">Weekly overview ・ May 2 — May 8</span>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2 mb-3">
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">SAT<div class="font-mincho" style="color: var(--accent);">土</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">SUN<div class="font-mincho" style="color: var(--accent);">日</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">MON<div class="font-mincho">月</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">TUE<div class="font-mincho">火</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">WED<div class="font-mincho">水</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">THU<div class="font-mincho">木</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">FRI<div class="font-mincho">金</div></div>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2">
+      <div class="calendar-cell rounded p-2 flex flex-col">
+        <span class="font-latin text-xs" style="color: var(--ink-soft);">2</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 30%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 60%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 45%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center" style="color: var(--ink-soft);">2,140</span>
+      </div>
+      <div class="calendar-cell rounded p-2 flex flex-col">
+        <span class="font-latin text-xs" style="color: var(--ink-soft);">3</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 25%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 50%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 55%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center" style="color: var(--ink-soft);">1,920</span>
+      </div>
+      <div class="calendar-cell rounded p-2 flex flex-col">
+        <span class="font-latin text-xs" style="color: var(--ink-soft);">4</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 35%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 40%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 50%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center" style="color: var(--ink-soft);">1,780</span>
+      </div>
+      <div class="calendar-cell rounded p-2 flex flex-col">
+        <span class="font-latin text-xs" style="color: var(--ink-soft);">5</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 30%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 55%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 48%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center" style="color: var(--ink-soft);">1,950</span>
+      </div>
+      <div class="calendar-cell rounded p-2 flex flex-col">
+        <span class="font-latin text-xs" style="color: var(--ink-soft);">6</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 28%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 65%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 42%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center" style="color: var(--ink-soft);">2,080</span>
+      </div>
+      <div class="calendar-cell rounded p-2 flex flex-col">
+        <span class="font-latin text-xs" style="color: var(--ink-soft);">7</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 22%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 48%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 52%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center" style="color: var(--ink-soft);">1,860</span>
+      </div>
+      <div class="calendar-cell rounded p-2 flex flex-col" style="background: var(--paper-deep); border-color: var(--accent);">
+        <span class="font-latin text-xs font-bold" style="color: var(--accent);">8</span>
+        <div class="flex-1 flex items-end justify-center gap-0.5">
+          <span class="w-1 bg-current rounded-t" style="height: 26%; color: #b89668;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 58%; color: #b8543a;"></span>
+          <span class="w-1 bg-current rounded-t" style="height: 47%; color: #6b7a3e;"></span>
+        </div>
+        <span class="font-latin text-[0.6rem] text-center font-bold" style="color: var(--accent);">1,847</span>
+      </div>
+    </div>
+
+    <div class="mt-5 pt-4 grid grid-cols-3 gap-4 text-sm" style="border-top: 1px dashed var(--rule);">
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Weekly Avg.</div>
+        <div class="font-mincho text-xl font-bold">1,939 <span class="text-xs font-normal" style="color: var(--ink-soft);">kcal/日</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Best Day</div>
+        <div class="font-mincho text-xl font-bold">5月7日 <span class="text-xs font-normal" style="color: var(--leaf);">バランス◎</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Tags Used</div>
+        <div class="font-mincho text-xl font-bold">和食 <span class="text-xs font-normal" style="color: var(--ink-soft);">・ 自炊7食</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= 今日のひと言・気づき ========= -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+
+    <div class="meal-card p-6 md:p-8 relative overflow-hidden">
+      <div class="absolute top-4 right-4 font-mincho text-6xl opacity-10" style="color: var(--accent);">"</div>
+      <h3 class="font-mincho text-xl font-bold mb-2">今日の一言</h3>
+      <span class="font-latin italic text-xs mb-4 block" style="color: var(--ink-soft);">— Today's note —</span>
+      <p class="font-mincho leading-relaxed text-base" style="color: var(--ink);">
+        季節の変わり目、<span class="marker-highlight">三つ葉や新ごぼう</span>など、春の名残を味わえる一日。和食中心でバランスもよく、満足感のある献立だった。<br>
+        <span class="text-sm" style="color: var(--ink-soft);">明日は塩分を少し控えめに調整したい。</span>
+      </p>
+    </div>
+
+    <div class="meal-card p-6 md:p-8">
+      <h3 class="font-mincho text-xl font-bold mb-2">気づき・ハイライト</h3>
+      <span class="font-latin italic text-xs mb-4 block" style="color: var(--ink-soft);">— Highlights —</span>
+      <ul class="space-y-3">
+        <li class="flex items-start gap-3">
+          <span class="font-latin font-bold text-2xl leading-none" style="color: var(--gold);">01</span>
+          <div class="flex-1 text-sm leading-relaxed">食物繊維の摂取量が目標を超えた。野菜中心の昼食が効いた。</div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="font-latin font-bold text-2xl leading-none" style="color: var(--gold);">02</span>
+          <div class="flex-1 text-sm leading-relaxed">塩分がやや多め。汁物を減らすか具だくさんに。</div>
+        </li>
+        <li class="flex items-start gap-3">
+          <span class="font-latin font-bold text-2xl leading-none" style="color: var(--gold);">03</span>
+          <div class="flex-1 text-sm leading-relaxed">14日連続で記録継続中。もう少しで2週間達成。</div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= フッター ========= -->
+  <footer class="pt-8 mt-8" style="border-top: 2px solid var(--ink);">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <div class="font-mincho text-lg font-bold mb-1">毎日の食事メモ報告</div>
+        <div class="font-latin italic text-xs" style="color: var(--ink-soft);">A daily ritual of mindful eating ・ since 2026</div>
+      </div>
+      <div class="flex items-center gap-4 text-xs" style="color: var(--ink-soft);">
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--leaf);"></span>
+          <span class="font-latin">Source: Google Sheets</span>
+        </div>
+        <span style="color: var(--rule);">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--gold);"></span>
+          <span class="font-latin">Built with GitHub Actions</span>
+        </div>
+        <span style="color: var(--rule);">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--accent);"></span>
+          <span class="font-latin">Hosted on Surge.sh</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 text-center font-latin italic text-xs" style="color: var(--ink-soft);">
+      ❖ &nbsp; Last updated: 2026.05.08 06:00 JST &nbsp; ❖ &nbsp; Next run: 2026.05.09 06:00 JST &nbsp; ❖
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>毎日の食事メモ報告 — {{reportDateYmdDots}}</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #f7f3ec;
+    --paper-deep: #efe8db;
+    --ink: #2a241e;
+    --ink-soft: #5a4f44;
+    --accent: #b8543a;
+    --accent-deep: #8a3a25;
+    --gold: #b89668;
+    --leaf: #6b7a3e;
+    --rule: #d9cfba;
+  }
+  body {
+    font-family: 'Zen Kaku Gothic New', sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    background-image:
+      radial-gradient(circle at 20% 10%, rgba(184, 84, 58, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 80%, rgba(107, 122, 62, 0.05) 0%, transparent 50%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.16 0 0 0 0 0.14 0 0 0 0 0.11 0 0 0 0.04 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .font-mincho { font-family: 'Shippori Mincho', serif; }
+  .font-latin { font-family: 'Cormorant Garamond', serif; }
+  .vertical-jp {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+  }
+  .seal {
+    background: var(--accent);
+    color: var(--paper);
+    font-family: 'Shippori Mincho', serif;
+    box-shadow: 0 2px 0 rgba(0,0,0,0.08), inset 0 0 0 2px rgba(255,255,255,0.15);
+    transform: rotate(-4deg);
+  }
+  .deco-line {
+    background-image: linear-gradient(to right, var(--ink) 50%, transparent 50%);
+    background-size: 8px 1px;
+    background-repeat: repeat-x;
+  }
+  .meal-card {
+    background: linear-gradient(180deg, #fdfaf3 0%, #f7f3ec 100%);
+    border: 1px solid var(--rule);
+    box-shadow:
+      0 1px 0 rgba(255,255,255,0.6) inset,
+      0 12px 24px -16px rgba(42, 36, 30, 0.2),
+      0 2px 4px -2px rgba(42, 36, 30, 0.06);
+  }
+  .ribbon-tag {
+    background: var(--ink);
+    color: var(--paper);
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+  }
+  .nutri-bar-track {
+    background: var(--paper-deep);
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .gauge-circle {
+    transform: rotate(-90deg);
+  }
+  .ornament::before, .ornament::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--rule), transparent);
+  }
+  .ornament-symbol {
+    color: var(--gold);
+    margin: 0 1rem;
+    font-size: 0.875rem;
+    letter-spacing: 0.3em;
+  }
+  .photo-frame {
+    background: linear-gradient(135deg, #d4c4a8 0%, #a89376 50%, #8a7558 100%);
+    padding: 6px;
+    box-shadow: 0 8px 16px -8px rgba(42, 36, 30, 0.3);
+  }
+  .star-rating { letter-spacing: 0.15em; color: var(--accent); }
+  .calendar-cell {
+    aspect-ratio: 1;
+    border: 1px solid var(--rule);
+  }
+  .marker-highlight {
+    background: linear-gradient(180deg, transparent 60%, rgba(184, 150, 104, 0.35) 60%);
+  }
+  .corner-cut {
+    clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+  }
+  .grain-overlay {
+    position: relative;
+  }
+  .grain-overlay::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3'/%3E%3CfeColorMatrix values='0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.06 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    mix-blend-mode: multiply;
+  }
+</style>
+</head>
+<body class="min-h-screen">
+
+<div class="max-w-5xl mx-auto px-6 md:px-12 py-10 md:py-16">
+
+  <!-- ========= ヘッダー ========= -->
+  <header class="relative mb-12">
+    <div class="flex items-start justify-between gap-6 mb-6">
+      <div class="flex-1">
+        <div class="flex items-center gap-3 mb-3">
+          <span class="font-latin italic text-sm tracking-widest" style="color: var(--ink-soft);">No. {{reportNumber}}</span>
+          <span class="deco-line h-px flex-1 max-w-[120px]"></span>
+          <span class="font-latin text-xs tracking-[0.3em] uppercase" style="color: var(--ink-soft);">Daily Meal Journal</span>
+        </div>
+        <h1 class="font-mincho font-bold leading-[1.05] tracking-tight" style="font-size: clamp(2.5rem, 6vw, 4.25rem);">
+          毎日の<span style="color: var(--accent);">食事メモ</span><br>
+          <span class="font-latin italic font-medium text-3xl md:text-4xl" style="color: var(--ink-soft);">— a record of small flavors —</span>
+        </h1>
+      </div>
+      <div class="seal w-20 h-20 rounded-full flex flex-col items-center justify-center shrink-0 grain-overlay">
+        <span class="text-[0.6rem] tracking-widest opacity-80">REPORT</span>
+        <span class="font-bold text-2xl leading-none">食</span>
+        <span class="text-[0.55rem] tracking-widest opacity-80 mt-0.5">{{reportYear}}</span>
+      </div>
+    </div>
+
+    <div class="flex flex-wrap items-center gap-x-6 gap-y-2 pt-4" style="border-top: 1px solid var(--rule);">
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Date</div>
+        <div class="font-mincho text-lg font-medium">{{reportDateJp}} <span class="text-sm" style="color: var(--ink-soft);">{{weekdayJp}}</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Weather</div>
+        <div class="font-mincho text-lg font-medium">{{weather}} <span class="text-sm" style="color: var(--ink-soft);">・ {{temperature}}</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Mood</div>
+        <div class="font-mincho text-lg font-medium">{{mood}} <span class="star-rating text-sm">{{moodStars}}</span></div>
+      </div>
+      <div class="ml-auto text-right">
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Generated</div>
+        <div class="font-mincho text-sm" style="color: var(--ink-soft);">via GitHub Actions ・ {{generatedAtJst}}</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ========= サマリーストリップ ========= -->
+  <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Total Calories</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold" style="color: var(--accent);">{{totalCalories}}</span>
+        <span class="text-sm" style="color: var(--ink-soft);">kcal</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">目標: {{calorieGoal}} kcal ・ {{calorieGoalPct}}%</div>
+    </div>
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Meals Logged</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold">{{mealsLogged}}</span>
+        <span class="text-sm" style="color: var(--ink-soft);">{{mealsLoggedLabel}}</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">{{mealsLoggedNote}}</div>
+    </div>
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Water Intake</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold">{{waterLiters}}</span>
+        <span class="text-sm" style="color: var(--ink-soft);">L</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">{{waterGauge}} {{waterPct}}%</div>
+    </div>
+    <div class="meal-card p-5 corner-cut">
+      <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em] mb-1" style="color: var(--ink-soft);">Streak</div>
+      <div class="flex items-baseline gap-1">
+        <span class="font-mincho text-4xl font-bold" style="color: var(--leaf);">{{streakDays}}</span>
+        <span class="text-sm" style="color: var(--ink-soft);">日連続</span>
+      </div>
+      <div class="text-xs mt-1" style="color: var(--ink-soft);">{{streakNote}}</div>
+    </div>
+  </section>
+
+  <!-- ========= 装飾区切り ========= -->
+  <div class="ornament flex items-center mb-10">
+    <span class="ornament-symbol">❖ ・ ❖</span>
+  </div>
+
+  <!-- ========= 三食メインセクション ========= -->
+  <section class="space-y-8 mb-16">
+
+    <!-- 朝食 -->
+    <article class="meal-card p-6 md:p-8 grain-overlay">
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- 写真 -->
+        <div class="md:w-2/5">
+          <div class="photo-frame">
+            <div class="aspect-[4/3] flex items-center justify-center" style="background: linear-gradient(135deg, #f4d6a8 0%, #e8b67d 50%, #c98856 100%);">
+              {{{breakfastPhotoHtml}}}
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs" style="color: var(--ink-soft);">
+            <span class="font-latin italic">— breakfast —</span>
+            <span>{{breakfastPhotoTimeLabel}}</span>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="md:w-3/5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="ribbon-tag px-3 py-1 text-xs tracking-widest font-latin uppercase">01 Morning</span>
+                <span class="font-latin italic text-sm" style="color: var(--ink-soft);">{{breakfastTime}}</span>
+              </div>
+              <h2 class="font-mincho text-3xl font-bold">朝食 <span class="text-base font-normal" style="color: var(--ink-soft);">— あさごはん</span></h2>
+            </div>
+            <div class="text-right">
+              <div class="font-mincho text-2xl font-bold" style="color: var(--accent);">{{breakfastCalories}}</div>
+              <div class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">KCAL</div>
+            </div>
+          </div>
+
+          <ul class="space-y-1 mb-4 text-sm">
+            {{{breakfastItemsHtml}}}
+          </ul>
+
+          <div class="p-3 text-sm leading-relaxed font-mincho italic" style="background: var(--paper-deep); border-left: 3px solid var(--accent); color: var(--ink-soft);">
+            「{{{breakfastMemoHtml}}}」
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 昼食 -->
+    <article class="meal-card p-6 md:p-8 grain-overlay">
+      <div class="flex flex-col md:flex-row-reverse gap-6">
+        <!-- 写真 -->
+        <div class="md:w-2/5">
+          <div class="photo-frame">
+            <div class="aspect-[4/3] flex items-center justify-center" style="background: linear-gradient(135deg, #d4ad7c 0%, #b8854d 50%, #8a5d2a 100%);">
+              {{{lunchPhotoHtml}}}
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs" style="color: var(--ink-soft);">
+            <span class="font-latin italic">— lunch —</span>
+            <span>{{lunchPhotoTimeLabel}}</span>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="md:w-3/5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="ribbon-tag px-3 py-1 text-xs tracking-widest font-latin uppercase">02 Noon</span>
+                <span class="font-latin italic text-sm" style="color: var(--ink-soft);">{{lunchTime}}</span>
+              </div>
+              <h2 class="font-mincho text-3xl font-bold">昼食 <span class="text-base font-normal" style="color: var(--ink-soft);">— おひるごはん</span></h2>
+            </div>
+            <div class="text-right">
+              <div class="font-mincho text-2xl font-bold" style="color: var(--accent);">{{lunchCalories}}</div>
+              <div class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">KCAL</div>
+            </div>
+          </div>
+
+          <ul class="space-y-1 mb-4 text-sm">
+            {{{lunchItemsHtml}}}
+          </ul>
+
+          <div class="p-3 text-sm leading-relaxed font-mincho italic" style="background: var(--paper-deep); border-left: 3px solid var(--accent); color: var(--ink-soft);">
+            「{{{lunchMemoHtml}}}」
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <!-- 夕食 -->
+    <article class="meal-card p-6 md:p-8 grain-overlay">
+      <div class="flex flex-col md:flex-row gap-6">
+        <!-- 写真 -->
+        <div class="md:w-2/5">
+          <div class="photo-frame">
+            <div class="aspect-[4/3] flex items-center justify-center" style="background: linear-gradient(135deg, #6a7a4e 0%, #4a5a3e 50%, #2a3a2e 100%);">
+              {{{dinnerPhotoHtml}}}
+            </div>
+          </div>
+          <div class="mt-3 flex items-center justify-between text-xs" style="color: var(--ink-soft);">
+            <span class="font-latin italic">— dinner —</span>
+            <span>{{dinnerPhotoTimeLabel}}</span>
+          </div>
+        </div>
+
+        <!-- 内容 -->
+        <div class="md:w-3/5">
+          <div class="flex items-start justify-between mb-3">
+            <div>
+              <div class="flex items-center gap-2 mb-1">
+                <span class="ribbon-tag px-3 py-1 text-xs tracking-widest font-latin uppercase">03 Evening</span>
+                <span class="font-latin italic text-sm" style="color: var(--ink-soft);">{{dinnerTime}}</span>
+              </div>
+              <h2 class="font-mincho text-3xl font-bold">夕食 <span class="text-base font-normal" style="color: var(--ink-soft);">— ばんごはん</span></h2>
+            </div>
+            <div class="text-right">
+              <div class="font-mincho text-2xl font-bold" style="color: var(--accent);">{{dinnerCalories}}</div>
+              <div class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">KCAL</div>
+            </div>
+          </div>
+
+          <ul class="space-y-1 mb-4 text-sm">
+            {{{dinnerItemsHtml}}}
+          </ul>
+
+          <div class="p-3 text-sm leading-relaxed font-mincho italic" style="background: var(--paper-deep); border-left: 3px solid var(--accent); color: var(--ink-soft);">
+            「{{{dinnerMemoHtml}}}」
+          </div>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ========= 装飾区切り ========= -->
+  <div class="ornament flex items-center mb-10">
+    <span class="ornament-symbol">❖ ・ 栄養バランス ・ ❖</span>
+  </div>
+
+  <!-- ========= 栄養バランス & 摂取グラフ ========= -->
+  <section class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-16">
+
+    <!-- PFCバランス -->
+    <div class="meal-card p-6 lg:col-span-2">
+      <div class="flex items-baseline justify-between mb-5">
+        <h3 class="font-mincho text-xl font-bold">栄養素バランス</h3>
+        <span class="font-latin italic text-xs" style="color: var(--ink-soft);">Macro nutrients</span>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">タンパク質</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Protein</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">{{proteinG}}</span>
+              <span style="color: var(--ink-soft);"> / {{proteinGoalG}} g</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: {{proteinPct}}%; background: linear-gradient(to right, #b8543a, #d4684e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">脂質</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Fat</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">{{fatG}}</span>
+              <span style="color: var(--ink-soft);"> / {{fatGoalG}} g</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: {{fatPct}}%; background: linear-gradient(to right, #b89668, #d4b07e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">炭水化物</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Carbohydrate</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">{{carbsG}}</span>
+              <span style="color: var(--ink-soft);"> / {{carbsGoalG}} g</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: {{carbsPct}}%; background: linear-gradient(to right, #6b7a3e, #8a9a5e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">食物繊維</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Fiber</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">{{fiberG}}</span>
+              <span style="color: var(--ink-soft);"> / {{fiberGoalG}} g</span>
+              <span class="ml-1" style="color: var(--leaf);">{{fiberOkMark}}</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: {{fiberPct}}%; background: linear-gradient(to right, #4a6a2e, #6b8a4e);"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="flex justify-between items-baseline mb-1.5">
+            <div class="flex items-baseline gap-2">
+              <span class="font-mincho font-bold">塩分</span>
+              <span class="font-latin text-xs italic" style="color: var(--ink-soft);">Salt</span>
+            </div>
+            <div class="font-latin text-sm">
+              <span class="font-bold">{{saltG}}</span>
+              <span style="color: var(--ink-soft);"> / {{saltGoalG}} g</span>
+              <span class="ml-1" style="color: var(--accent);">{{saltWarnMark}}</span>
+            </div>
+          </div>
+          <div class="nutri-bar-track h-3 rounded-full overflow-hidden">
+            <div class="h-full rounded-full" style="width: {{saltPct}}%; background: linear-gradient(to right, #8a3a25, #b8543a);"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- カロリー配分 -->
+    <div class="meal-card p-6">
+      <div class="flex items-baseline justify-between mb-5">
+        <h3 class="font-mincho text-xl font-bold">時間別配分</h3>
+        <span class="font-latin italic text-xs" style="color: var(--ink-soft);">Distribution</span>
+      </div>
+
+      <div class="flex flex-col items-center">
+        <div class="relative w-44 h-44 mb-4">
+          <svg viewBox="0 0 100 100" class="gauge-circle w-full h-full">
+            <!-- 背景 -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="var(--paper-deep)" stroke-width="14"/>
+            <!-- 朝 -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#b89668" stroke-width="14"
+                    stroke-dasharray="{{dashBreakfast}} 251" stroke-dashoffset="0"/>
+            <!-- 昼 -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#b8543a" stroke-width="14"
+                    stroke-dasharray="{{dashLunch}} 251" stroke-dashoffset="-{{dashBreakfast}}"/>
+            <!-- 夕 -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#6b7a3e" stroke-width="14"
+                    stroke-dasharray="{{dashDinner}} 251" stroke-dashoffset="-{{dashBreakfastPlusLunch}}"/>
+            <!-- 間食 -->
+            <circle cx="50" cy="50" r="40" fill="none" stroke="#5a4f44" stroke-width="14"
+                    stroke-dasharray="{{dashSnack}} 251" stroke-dashoffset="-{{dashBreakfastPlusLunchPlusDinner}}"/>
+          </svg>
+          <div class="absolute inset-0 flex flex-col items-center justify-center">
+            <span class="font-mincho text-3xl font-bold" style="color: var(--accent);">{{totalCalories}}</span>
+            <span class="text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">TOTAL KCAL</span>
+          </div>
+        </div>
+
+        <div class="w-full space-y-1.5 text-sm">
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #b89668;"></span>
+            <span class="font-mincho flex-1">朝食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">{{pctBreakfast}}%</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #b8543a;"></span>
+            <span class="font-mincho flex-1">昼食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">{{pctLunch}}%</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #6b7a3e;"></span>
+            <span class="font-mincho flex-1">夕食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">{{pctDinner}}%</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <span class="w-3 h-3 rounded-sm" style="background: #5a4f44;"></span>
+            <span class="font-mincho flex-1">間食</span>
+            <span class="font-latin" style="color: var(--ink-soft);">{{pctSnack}}%</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= 週間カレンダー ========= -->
+  <section class="meal-card p-6 md:p-8 mb-16">
+    <div class="flex items-baseline justify-between mb-6">
+      <h3 class="font-mincho text-xl font-bold">週間記録 <span class="font-latin italic text-sm font-normal" style="color: var(--ink-soft);">— 今週の食卓</span></h3>
+      <span class="font-latin italic text-xs" style="color: var(--ink-soft);">Weekly overview ・ {{weekRangeLabel}}</span>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2 mb-3">
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">SAT<div class="font-mincho" style="color: var(--accent);">土</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">SUN<div class="font-mincho" style="color: var(--accent);">日</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">MON<div class="font-mincho">月</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">TUE<div class="font-mincho">火</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">WED<div class="font-mincho">水</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">THU<div class="font-mincho">木</div></div>
+      <div class="text-center font-latin text-[0.65rem] tracking-widest" style="color: var(--ink-soft);">FRI<div class="font-mincho">金</div></div>
+    </div>
+
+    <div class="grid grid-cols-7 gap-2">
+      {{{weeklyCellsHtml}}}
+    </div>
+
+    <div class="mt-5 pt-4 grid grid-cols-3 gap-4 text-sm" style="border-top: 1px dashed var(--rule);">
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Weekly Avg.</div>
+        <div class="font-mincho text-xl font-bold">{{weeklyAvgCalories}} <span class="text-xs font-normal" style="color: var(--ink-soft);">kcal/日</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Best Day</div>
+        <div class="font-mincho text-xl font-bold">{{bestDayLabel}} <span class="text-xs font-normal" style="color: var(--leaf);">{{bestDayNote}}</span></div>
+      </div>
+      <div>
+        <div class="font-latin text-[0.65rem] uppercase tracking-[0.25em]" style="color: var(--ink-soft);">Tags Used</div>
+        <div class="font-mincho text-xl font-bold">{{tagsUsed}}</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========= 今日のひと言・気づき ========= -->
+  <section class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+
+    <div class="meal-card p-6 md:p-8 relative overflow-hidden">
+      <div class="absolute top-4 right-4 font-mincho text-6xl opacity-10" style="color: var(--accent);">"</div>
+      <h3 class="font-mincho text-xl font-bold mb-2">今日の一言</h3>
+      <span class="font-latin italic text-xs mb-4 block" style="color: var(--ink-soft);">— Today's note —</span>
+      <p class="font-mincho leading-relaxed text-base" style="color: var(--ink);">
+        {{{todaysNoteHtml}}}
+      </p>
+    </div>
+
+    <div class="meal-card p-6 md:p-8">
+      <h3 class="font-mincho text-xl font-bold mb-2">気づき・ハイライト</h3>
+      <span class="font-latin italic text-xs mb-4 block" style="color: var(--ink-soft);">— Highlights —</span>
+      <ul class="space-y-3">
+        {{{highlightsHtml}}}
+      </ul>
+    </div>
+  </section>
+
+  <!-- ========= フッター ========= -->
+  <footer class="pt-8 mt-8" style="border-top: 2px solid var(--ink);">
+    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+      <div>
+        <div class="font-mincho text-lg font-bold mb-1">毎日の食事メモ報告</div>
+        <div class="font-latin italic text-xs" style="color: var(--ink-soft);">A daily ritual of mindful eating ・ since 2026</div>
+      </div>
+      <div class="flex items-center gap-4 text-xs" style="color: var(--ink-soft);">
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--leaf);"></span>
+          <span class="font-latin">Source: Google Sheets</span>
+        </div>
+        <span style="color: var(--rule);">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--gold);"></span>
+          <span class="font-latin">Built with GitHub Actions</span>
+        </div>
+        <span style="color: var(--rule);">|</span>
+        <div class="flex items-center gap-1.5">
+          <span class="w-1.5 h-1.5 rounded-full" style="background: var(--accent);"></span>
+          <span class="font-latin">Hosted on Surge.sh</span>
+        </div>
+      </div>
+    </div>
+    <div class="mt-6 text-center font-latin italic text-xs" style="color: var(--ink-soft);">
+      ❖ &nbsp; Last updated: {{generatedAtFullJst}} &nbsp; ❖ &nbsp; Next run: {{nextRunJst}} &nbsp; ❖
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

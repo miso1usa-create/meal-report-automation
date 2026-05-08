@@ -1,0 +1,55 @@
+name: Daily Meal Report
+
+on:
+  workflow_dispatch:
+  schedule:
+    # 06:00 JST = 21:00 UTC (previous day)
+    - cron: "0 21 * * *"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: daily-meal-report
+  cancel-in-progress: true
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    env:
+      SHEETS_ID: ${{ secrets.SHEETS_ID }}
+      SHEETS_RANGE: ${{ secrets.SHEETS_RANGE }}
+      GOOGLE_SERVICE_ACCOUNT_JSON: ${{ secrets.GOOGLE_SERVICE_ACCOUNT_JSON }}
+      REPORT_TZ: Asia/Tokyo
+      REPORT_TARGET: yesterday
+
+      CALORIE_GOAL: ${{ secrets.CALORIE_GOAL }}
+      PROTEIN_GOAL_G: ${{ secrets.PROTEIN_GOAL_G }}
+      FAT_GOAL_G: ${{ secrets.FAT_GOAL_G }}
+      CARBS_GOAL_G: ${{ secrets.CARBS_GOAL_G }}
+      FIBER_GOAL_G: ${{ secrets.FIBER_GOAL_G }}
+      SALT_GOAL_G: ${{ secrets.SALT_GOAL_G }}
+      WATER_GOAL_L: ${{ secrets.WATER_GOAL_L }}
+
+      SURGE_TOKEN: ${{ secrets.SURGE_TOKEN }}
+      SURGE_DOMAIN: ${{ secrets.SURGE_DOMAIN }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build report (dist/index.html)
+        run: npm run run:daily
+
+      - name: Deploy to Surge
+        run: npx --yes surge ./dist --domain "${SURGE_DOMAIN}" --token "${SURGE_TOKEN}"
+
